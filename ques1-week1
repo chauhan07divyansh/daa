@@ -1,0 +1,48 @@
+ 1 /* I. Given an array of nonnegative integers, design a linear algorithm and implement it using a
+ 2 program to find whether given key element is present in the array or not. Also, find total number
+ 3 of comparisons for each input case. (Time Complexity = O(n), where n is the size of input) */
+ 4
+ 5 #include <stdio.h>
+ 6
+ 7 int comparisons = 0;
+ 8 int linearsearch(int arr[], int n, int key)
+ 9 {
+10 for (int i = 0; i < n; i++)
+11 {
+12 comparisons++;
+13 if (arr[i] == key)
+14 {
+15 return i;
+16 }
+17 }
+18 return -1;
+19 }
+20
+21 int main()
+22 {
+23 int n, key;
+24 printf("enter the size of the array: ");
+25 scanf("%d", &n);
+26 int arr[n];
+27 printf("enter the array elements: ");
+28 for (int i = 0; i < n; i++)
+29 {
+30 scanf("%d", &arr[i]);
+31 }
+32 printf("enter the key to be searched: ");
+33 scanf("%d", &key);
+34 int result = linearsearch(arr, n, key);
+35 if (result != -1)
+36 {
+37 printf("Key found at index %d", result);
+38 }
+39 else
+40 {
+41 printf("Key not found in the array");
+42 }
+43 printf("Total number of comparisons: %d", comparisons);
+44 return 0;
+45 }
+46
+47
+48 
