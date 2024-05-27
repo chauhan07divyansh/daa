@@ -1,0 +1,74 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+struct Edge {
+    int u, v, weight;
+    Edge(int _u, int _v, int _weight) : u(_u), v(_v), weight(_weight) {}
+};
+bool compare(Edge a, Edge b) {
+    return a.weight > b.weight;
+}
+class DisjointSet {
+public:
+    DisjointSet(int n) {
+        parent.resize(n);
+        rank.resize(n, 0);
+        for (int i = 0; i < n; ++i) {
+            parent[i] = i;
+        }
+    }
+    int find(int u) {
+        if (u != parent[u]) {
+            parent[u] = find(parent[u]);
+        }
+        return parent[u];
+    }
+    void unite(int u, int v) {
+        int root_u = find(u);
+        int root_v = find(v);
+        if (root_u != root_v) {
+            if (rank[root_u] > rank[root_v]) {
+                parent[root_v] = root_u;
+            } else if (rank[root_u] < rank[root_v]) {
+                parent[root_u] = root_v;
+            } else {
+                parent[root_v] = root_u;
+                rank[root_u]++;
+            }
+        }
+    }
+private:
+    vector<int> parent;
+    vector<int> rank;
+};
+int kruskalMaxST(int n, vector<Edge>& edges) {
+    sort(edges.begin(), edges.end(), compare);
+    DisjointSet ds(n);
+    int totalCost = 0;
+    int edgesUsed = 0;
+    for (const auto& edge : edges) {
+        if (ds.find(edge.u) != ds.find(edge.v)) {
+            ds.unite(edge.u, edge.v);
+            totalCost += edge.weight;
+            edgesUsed++;
+            if (edgesUsed == n - 1) {
+                break;
+            }
+        }
+    }
+    return totalCost;
+}
+int main() {
+    int n, m;
+    cin >> n >> m;
+    vector<Edge> edges;
+    for (int i = 0; i < m; ++i) {
+        int u, v, w;
+        cin >> u >> v >> w;
+        edges.emplace_back(u, v, w);
+    }
+    int maxCost = kruskalMaxST(n, edges);
+    cout << "Maximum spanning tree weight: " << maxCost << endl;
+    return 0;
+}
