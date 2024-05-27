@@ -1,0 +1,39 @@
+#include <iostream>
+#include <vector>
+#include <iomanip>
+using namespace std;
+const int INF = 1e9; 
+void floydWarshall(int n, vector<vector<int>>& dist) {
+    for (int k = 0; k < n; ++k) {
+        for (int i = 0; i < n; ++i) {
+            for (int j = 0; j < n; ++j) {
+                if (dist[i][k] < INF && dist[k][j] < INF) { 
+                    dist[i][j] = min(dist[i][j], dist[i][k] + dist[k][j]);
+                }
+            }
+        }
+    }
+}
+int main() {
+    int n;
+    cin >> n; 
+    vector<vector<int>> dist(n, vector<int>(n, INF));
+    for (int i = 0; i < n; ++i) {
+        for (int j = 0; j < n; ++j) {
+            cin >> dist[i][j];
+            if (i == j) dist[i][j] = 0; // Distance from a vertex to itself is 0
+        }
+    }
+    floydWarshall(n, dist);
+    cout << "Shortest distance matrix:" << endl;
+    for (int i = 0; i < n; ++i) {
+        for (int j = 0; j < n; ++j) {
+            if (dist[i][j] == INF)
+                cout << "INF" << " ";
+            else
+                cout << dist[i][j] << " ";
+        }
+        cout << endl;
+    }
+    return 0;
+}
