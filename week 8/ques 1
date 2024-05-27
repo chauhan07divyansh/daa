@@ -1,0 +1,51 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <functional>
+#include <climits>
+using namespace std;
+struct Edge {
+    int to, weight;
+    Edge(int t, int w) : to(t), weight(w) {}
+};
+struct Compare {
+    bool operator()(Edge const& e1, Edge const& e2) {
+        return e1.weight > e2.weight;
+    }
+};
+int primMST(vector<vector<Edge>>& graph) {
+    int n = graph.size();
+    vector<bool> inMST(n, false);
+    priority_queue<Edge, vector<Edge>, Compare> pq;
+    int totalCost = 0;
+    pq.push(Edge(0, 0));
+    while (!pq.empty()) {
+        Edge current = pq.top();
+        pq.pop();
+        int vertex = current.to;
+        int weight = current.weight;
+        if (inMST[vertex]) continue;
+        inMST[vertex] = true;
+        totalCost += weight;
+        for (Edge& edge : graph[vertex]) {
+            if (!inMST[edge.to]) {
+                pq.push(edge);
+            }
+        }
+    }
+    return totalCost;
+}
+int main() {
+    int n, m;
+    cin >> n >> m;
+    vector<vector<Edge>> graph(n);
+    for (int i = 0; i < m; ++i) {
+        int u, v, w;
+        cin >> u >> v >> w;
+        graph[u].emplace_back(v, w);
+        graph[v].emplace_back(u, w);
+    }
+    int minCost = primMST(graph);
+    cout << "Minimum cost to connect all cities: " << minCost << endl;
+    return 0;
+}
